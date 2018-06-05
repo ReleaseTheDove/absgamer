@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:aop="http://www.springframework.org/schema/aop" 
+	xmlns:aop="http://www.springframework.org/schema/aop"
 	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:mvc="http://www.springframework.org/schema/mvc" 
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
 	xmlns:tx="http://www.springframework.org/schema/tx"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:p="http://www.springframework.org/schema/p"
 	xsi:schemaLocation="
         http://www.springframework.org/schema/beans 
@@ -14,33 +14,54 @@
         http://www.springframework.org/schema/mvc 
         http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
 
-   <context:component-scan base-package="com.abs.service" annotation-config="true" />
-   <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+	<context:component-scan
+		base-package="com.abs.controller" annotation-config="true" />
+	<bean
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="location" value="classpath:config.properties" />
 	</bean>
-	<mvc:annotation-driven/>
+	<mvc:annotation-driven>
+		<!-- 处理responseBody 里面日期类型 -->
+		<mvc:message-converters>
+			<bean
+				class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+				<property name="objectMapper">
+					<bean class="com.fasterxml.jackson.databind.ObjectMapper">
+						<property name="dateFormat">
+							<bean class="java.text.SimpleDateFormat">
+								<constructor-arg type="java.lang.String"
+									value="yyyy-MM-dd HH:mm:ss" />
+							</bean>
+						</property>
+						<property name="serializationInclusion">
+                            <value type="com.fasterxml.jackson.annotation.JsonInclude.Include">NON_NULL</value>
+                        </property>
+					</bean>
+				</property>
+			</bean>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
 
-	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-	<property name="order" value="2" />
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		 <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
 		<property name="prefix" value="/WEB-INF/jsp/" />
 		<property name="suffix" value=".jsp" />
 		<property name="requestContextAttribute" value="request" />
+		<property name="order" value="0" />
 	</bean>
-		
+
 	<bean id="multipartResolver"
 		class="org.springframework.web.multipart.commons.CommonsMultipartResolver"
 		p:defaultEncoding="utf-8" />
-    
-	
+	<bean
+		class="com.mangofactory.swagger.configuration.SpringSwaggerConfig" />
+	<bean class="com.abs.swagger.SwaggerConfig" />
+
 
 	<!-- <mvc:annotation-driven /> <mvc:default-servlet-handler /> -->
-	<mvc:resources mapping="/css/**" location="/css/" />
-	<mvc:resources mapping="/img/**" location="/img/" />
-	<mvc:resources mapping="/font/**" location="/font/" />
-	<mvc:resources mapping="/assets/**" location="/assets/" />
-	<mvc:resources mapping="/avatars/**" location="/avatars/" />
-	<mvc:resources mapping="/js/**" location="/js/" />
-	<mvc:resources mapping="/templates/**" location="/templates/" />
-	<mvc:resources mapping="/*.jsp" location="/jsp/" />
-	<mvc:resources mapping="/resources/**" location="/resources/" />
+	<!-- 所有swagger目录的访问，直接访问location指定的目录 -->
+	<mvc:resources mapping="/swagger/**" location="/swagger/" />
+	<!-- 图片保存目录 -->
+	<mvc:resources mapping="/upload/**" location="/upload/" />
 </beans>

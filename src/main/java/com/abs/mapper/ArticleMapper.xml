@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abs.dao.ArticleMapper">
+  <resultMap id="BaseResultMap" type="com.abs.entity.Article">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="categoryid" jdbcType="INTEGER" property="categoryid" />
+    <result column="article_origin" jdbcType="VARCHAR" property="articleOrigin" />
+    <result column="author" jdbcType="VARCHAR" property="author" />
+    <result column="browse_count" jdbcType="INTEGER" property="browseCount" />
+    <result column="createdatetime" jdbcType="TIMESTAMP" property="createdatetime" />
+    <result column="content" jdbcType="LONGVARCHAR" property="content" />
+  </resultMap>
+  <select id="selectIndexArticleByType" parameterType="int" resultMap="BaseResultMap">
+		select id,title,createdatetime from article where categoryid=#{0} order by createdatetime limit 0,5;
+	</select>
+	<select id="getPage" parameterType="int" resultMap="BaseResultMap">
+		select id,title,createdatetime from article where categoryid=#{0} order by createdatetime limit #{1},#{2};
+	</select>
+	<select id="getPageCount" parameterType="int" resultType="int">
+		select count(*) from article where categoryid=#{0};
+	</select>
+</mapper>

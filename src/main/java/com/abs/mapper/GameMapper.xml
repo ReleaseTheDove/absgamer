@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.abs.dao.GameMapper">
+  <resultMap id="BaseResultMap" type="com.abs.entity.Game">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="gamename" jdbcType="VARCHAR" property="gamename" />
+    <result column="score" jdbcType="VARCHAR" property="score" />
+    <result column="type" jdbcType="TINYINT" property="type" />
+    <result column="gamerurl" jdbcType="VARCHAR" property="gamerurl" />
+    <result column="createdatetime" jdbcType="TIMESTAMP" property="createdatetime" />
+  </resultMap>
+	<select id="getGameList" resultMap="BaseResultMap">
+		select * from
+		(select * from game where type = 0 ORDER BY id ) as t1
+		union
+		select * from
+		(select * from game where type = 1 ORDER BY id ) as t2
+	</select>
+</mapper>

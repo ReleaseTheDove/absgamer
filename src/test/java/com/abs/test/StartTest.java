@@ -15,7 +15,12 @@ import org.mybatis.generator.internal.DefaultShellCallback;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.core.io.ClassPathResource;
 
+import com.abs.entity.Article;
+import com.abs.entity.Category;
+import com.abs.service.ArticleService;
+import com.abs.service.CategoryService;
 import com.abs.service.TestService;
+import com.abs.viewentity.IndexArticleView;
 
 /**
  * @ClassName: Test
@@ -44,5 +49,19 @@ public class StartTest {
     	ClassPathXmlApplicationContext cxa = new ClassPathXmlApplicationContext("classpath*:applicationcontext.xml");
 		TestService services =  (TestService)cxa.getBean("testService");
 		System.out.println(services.getName());
+		CategoryService csvr =  (CategoryService)cxa.getBean("categoryService");
+		Category c = new Category();
+		c.setId(1);
+		System.out.println(csvr.selectOne(c).getName());
     }
+    
+    @Test
+    public void ServiceTest() {
+    	ClassPathXmlApplicationContext cxa = new ClassPathXmlApplicationContext("classpath*:applicationcontext.xml");
+    	ArticleService services =  (ArticleService)cxa.getBean("articleService");
+    	List<Article> list = services.getPage(1, 1, 2);
+    	for(Article a: list) {
+    		System.out.println(a.getContent());
+    	}
+	}
 }
